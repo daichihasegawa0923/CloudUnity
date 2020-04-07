@@ -52,9 +52,7 @@ public class Laucher : MonoBehaviourPunCallbacks
     {
         _progressPanel.SetActive(true);
         if (PhotonNetwork.IsConnected)
-        {
             PhotonNetwork.JoinRandomRoom();
-        }
         else
         {
             PhotonNetwork.GameVersion = this._gameVersion;

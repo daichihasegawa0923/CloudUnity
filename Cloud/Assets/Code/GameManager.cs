@@ -7,10 +7,11 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject _playerPrefab;
     // Start is called before the first frame update
     void Start()
     {
-        
+        PhotonNetwork.Instantiate(this._playerPrefab.name, new Vector3(0, 4, 0), Quaternion.identity, 0);
     }
 
     public override void OnLeftRoom()
