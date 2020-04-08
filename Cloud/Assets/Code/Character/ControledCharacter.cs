@@ -20,7 +20,7 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField]
     protected float _moveSpeed = 0.01f;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         this._characterController = GetComponent<CharacterController>();
         this._cameraWork = GetComponent<CameraWork>();
@@ -28,16 +28,16 @@ public class ControledCharacter : MonoBehaviourPun
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         if (photonView.IsMine)
         {
-            _cameraWork.OnStartFollowing();
+            //_cameraWork.OnStartFollowing();
         }
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
             return;
@@ -46,7 +46,7 @@ public class ControledCharacter : MonoBehaviourPun
         ControlSpinByKey();
     }
 
-    protected void ControlByKey()
+    protected virtual void ControlByKey()
     {
         var code = InputUtil.GetInputtingKeyCode();
         var motion = this._characterController.velocity;
@@ -64,7 +64,7 @@ public class ControledCharacter : MonoBehaviourPun
         _characterController.Move(motion);
     }
 
-    protected void ControlSpinByKey()
+    protected virtual void ControlSpinByKey()
     {
         var code = InputUtil.GetInputtingKeyCode();
         var spin = transform.eulerAngles;
