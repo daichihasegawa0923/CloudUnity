@@ -8,6 +8,8 @@ public class ControledCharacterRigidbody : ControledCharacter
 {
     protected Rigidbody _rigidbody;
     [SerializeField] protected float _speed;
+    [SerializeField] protected float _kickPower = 5.0f;
+
     protected override void Awake()
     {
         base.Awake();
@@ -24,6 +26,12 @@ public class ControledCharacterRigidbody : ControledCharacter
     override protected void Update()
     {
         base.Update();
+        this.AdjustRigidBody();
+    }
+
+    protected virtual void AdjustRigidBody()
+    {
+        this._rigidbody.angularVelocity = this._noSpeed;
     }
 
     protected override void ControlByKey()
@@ -62,6 +70,16 @@ public class ControledCharacterRigidbody : ControledCharacter
         this._animator.SetBool("walk",isAnimation);
         this._rigidbody.velocity = speed;
         this.transform.eulerAngles = spin;
+    }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<Rigidbody>())
+        {
+            Debug.Log(collision.gameObject.name);
+            var forceForward = transform.forward * this._kickPower;
+            forceForward.y += this._kickPower;
+            collision.gameObject.GetComponent<Rigidbody>().velocity += forceForward;
+        }
     }
 }
