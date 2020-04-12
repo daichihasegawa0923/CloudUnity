@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.Instantiate(this._playerPrefab.name, new Vector3(0, 40, 0), Quaternion.identity, 0);
+        var choicedCharcter = GameObject.FindObjectOfType<CharacterChoice>();
+        SceneManager.MoveGameObjectToScene(choicedCharcter.gameObject, SceneManager.GetActiveScene());
+        PhotonNetwork.Instantiate(choicedCharcter.GetGameInstance().name, new Vector3(0, 40, 0), Quaternion.identity, 0);
     }
 
     public override void OnLeftRoom()

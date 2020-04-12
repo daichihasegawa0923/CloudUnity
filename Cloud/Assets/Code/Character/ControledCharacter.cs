@@ -28,6 +28,10 @@ public class ControledCharacter : MonoBehaviourPun
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        var po = transform.position;
+        po.y = 10;
+        transform.position = po;
+
         if (photonView.IsMine)
         {
             //_cameraWork.OnStartFollowing();
