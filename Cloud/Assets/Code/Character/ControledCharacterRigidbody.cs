@@ -9,11 +9,21 @@ public class ControledCharacterRigidbody : ControledCharacter
     protected Rigidbody _rigidbody;
     [SerializeField] protected float _speed;
     [SerializeField] protected float _kickPower = 5.0f;
+    [SerializeField] protected float _kickUpPower = 5.0f;
+
+    [SerializeField] protected GameObject _namePlate;
 
     protected override void Awake()
     {
         base.Awake();
         this._rigidbody = GetComponent<Rigidbody>();
+        _namePlate = Instantiate(_namePlate);
+        _namePlate.transform.parent = transform;
+        var position =_namePlate.transform.localPosition;
+        position.x = 0;
+        position.z = 0;
+        position.y = 4;
+        _namePlate.transform.localPosition = position;
         
     }
     // Start is called before the first frame update
@@ -27,11 +37,17 @@ public class ControledCharacterRigidbody : ControledCharacter
     {
         base.Update();
         this.AdjustRigidBody();
+        this.UpdateName();
     }
 
     protected virtual void AdjustRigidBody()
     {
         this._rigidbody.angularVelocity = this._noSpeed;
+    }
+
+    protected void UpdateName()
+    {
+        this._namePlate.GetComponent<NamePlate>().NameText.text = photonView.Owner.NickName;
     }
 
     protected override void ControlByKey()
@@ -74,11 +90,11 @@ public class ControledCharacterRigidbody : ControledCharacter
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.GetComponent<Rigidbody>())
+        if (collision.gameObject.GetComponent<Ball>())
         {
             Debug.Log(collision.gameObject.name);
             var forceForward = transform.forward * this._kickPower;
-            forceForward.y += this._kickPower;
+            forceForward.y += this._kickUpPower;
             collision.gameObject.GetComponent<Rigidbody>().velocity += forceForward;
         }
     }

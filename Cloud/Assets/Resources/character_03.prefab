@@ -380,8 +380,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 0.01
-  _speed: 5
-  _kickPower: 5
+  _speed: 6
+  _kickPower: 6
+  _kickUpPower: 1
+  _namePlate: {fileID: 4762967925747662652, guid: 46910644351cf2d41a7eb6929286b347,
+    type: 3}
 --- !u!1 &3328613160600907302
 GameObject:
   m_ObjectHideFlags: 0
