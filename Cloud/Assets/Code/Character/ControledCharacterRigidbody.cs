@@ -47,7 +47,8 @@ public class ControledCharacterRigidbody : ControledCharacter
 
     protected void UpdateName()
     {
-        this._namePlate.GetComponent<NamePlate>().NameText.text = photonView.Owner.NickName;
+        if(photonView.Owner != null)
+            this._namePlate.GetComponent<NamePlate>().NameText.text = photonView.Owner.NickName;
     }
 
     protected override void ControlByKey()
