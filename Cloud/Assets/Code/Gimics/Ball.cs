@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour
 {
     [SerializeField] private Vector3 firstPosition;
     [SerializeField] protected Rigidbody _rigidbody;
+    [SerializeField] protected AudioSource _audioSource;
 
     public Vector3 FirstPosition { get => firstPosition; set => firstPosition = value; }
 
@@ -26,6 +27,11 @@ public class Ball : MonoBehaviour
     public void ResetPosition()
     {
         transform.position = this.FirstPosition;
+    }
+
+    public void Kicked()
+    {
+        this._audioSource.Play();
     }
 
     public void FixPosition()

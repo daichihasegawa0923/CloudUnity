@@ -7,6 +7,7 @@ public class Goal : MonoBehaviour
 {
     public int Score { set; private get; }
     [SerializeField] protected Text _textScore;
+    [SerializeField] protected GameObject _goalText;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -20,12 +21,13 @@ public class Goal : MonoBehaviour
 
     IEnumerator GoalCoroutine(Ball ball)
     {
+        _goalText.SetActive(true);
         var go = ball.gameObject;
         var position = ball.FirstPosition;
-        Destroy(go.GetComponent<Ball>());
+        ball.enabled = false;
         yield return new WaitForSeconds(3.0f);
-        var  newBall = go.AddComponent<Ball>();
-        newBall.FirstPosition = position;
-        go.transform.position = position;
+        _goalText.SetActive(false);
+        ball.enabled = true;
+        ball.ResetPosition();
     }
 }

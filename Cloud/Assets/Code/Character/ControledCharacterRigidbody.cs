@@ -95,6 +95,7 @@ public class ControledCharacterRigidbody : ControledCharacter
         {
             Debug.Log(collision.gameObject.name);
             var forceForward = transform.forward * this._kickPower;
+            collision.gameObject.GetComponent<Ball>().Kicked();
             forceForward.y += this._kickUpPower;
             collision.gameObject.GetComponent<Rigidbody>().velocity += forceForward;
         }
