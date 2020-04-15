@@ -1663,6 +1663,7 @@ MonoBehaviour:
   - {fileID: 5518705020064287910, guid: c0480f628b5662c4f835fde49ea8f9e6, type: 3}
   - {fileID: 8468300810976248585, guid: 9d942602008d83741ab6c9a064180684, type: 3}
   - {fileID: 4313541974737606050, guid: de2baf894096f974881d07c999e5a0c0, type: 3}
+  - {fileID: 8420199083865908867, guid: e60c57bac539f6542aa183a5926115b6, type: 3}
   _choiced: 0
   _choiceCharacter: {fileID: 0}
   _position: {x: -3.83, y: 1.15, z: 0}
