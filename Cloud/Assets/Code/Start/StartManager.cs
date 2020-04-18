@@ -15,7 +15,6 @@ public class StartManager : MonoBehaviour
     private void Awake()
     {
         StartCoroutine("SecenLoadCotoutine");
-        _audioSouce.SetScheduledStartTime(70);
     }
 
     void Update()
