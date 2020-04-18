@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("ControlPanels");
     }
 
     private void LoadArena()

@@ -26,6 +26,7 @@ public class Ball : MonoBehaviour
 
     public void ResetPosition()
     {
+        this._rigidbody.velocity = Vector3.zero;
         transform.position = this.FirstPosition;
     }
 
@@ -38,7 +39,6 @@ public class Ball : MonoBehaviour
     {
         if (Vector3.Distance(transform.position,FirstPosition) > 200)
         {
-            this._rigidbody.velocity = Vector3.zero;
             this.ResetPosition();
         }
     }

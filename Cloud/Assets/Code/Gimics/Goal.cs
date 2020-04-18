@@ -13,6 +13,8 @@ public class Goal : MonoBehaviour
     {
         if (other.gameObject.GetComponent<Ball>())
         {
+            if (!other.gameObject.GetComponent<Ball>().enabled)
+                return;
             this.Score += 1;
             _textScore.text = this.Score.ToString();
             StartCoroutine("GoalCoroutine", other.gameObject.GetComponent<Ball>());
