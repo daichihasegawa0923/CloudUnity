@@ -17,6 +17,7 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField] protected GameObject[] _arms;
     [SerializeField] protected Vector3[] _armEulerAngle;
     [SerializeField] protected GameObject _neck;
+
     [SerializeField] protected float _sensitivity = 4.0f; 
 
     protected Animator _animator;
@@ -69,7 +70,13 @@ public class ControledCharacter : MonoBehaviourPun
 
         var spin = transform.eulerAngles;
         spin.x -= mouseSpinY;
+        Debug.Log(spin.x);
+        if (spin.x > 180 && spin.x < 324)
+            spin.x = 325;
+        else if (spin.x < 180 && spin.x > 56)
+            spin.x = 55;
         spin.y += mouseSpinX;
+        spin.z = 0;
         transform.eulerAngles = spin;
 
     }

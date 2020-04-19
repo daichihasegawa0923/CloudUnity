@@ -269,6 +269,7 @@ MonoBehaviour:
   - {x: -2.39, y: 204.4, z: -87.3}
   - {x: -2.39, y: 155.9, z: -264.4}
   _neck: {fileID: 0}
+  _sensitivity: 4
   _moveSpeed: 2
 --- !u!54 &437955759
 Rigidbody:
