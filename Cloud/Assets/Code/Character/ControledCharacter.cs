@@ -5,15 +5,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Animator))]
-[RequireComponent(typeof(CameraWork))]
 public class ControledCharacter : MonoBehaviourPun
 {
 
-    protected CharacterController _characterController;
+    protected Rigidbody _rigidbody;
     protected CameraWork _cameraWork;
+
+    [SerializeField] protected GameObject[] _arms;
+    [SerializeField] protected Vector3[] _armEulerAngle;
+    [SerializeField] protected GameObject _neck;
+    [SerializeField] protected float _sensitivity = 4.0f; 
 
     protected Animator _animator;
     protected Vector3 _noSpeed = new Vector3(0, 0, 0);
@@ -22,7 +26,7 @@ public class ControledCharacter : MonoBehaviourPun
 
     private void Awake()
     {
-        this._characterController = GetComponent<CharacterController>();
+        this._rigidbody = GetComponent<Rigidbody>();
         this._cameraWork = GetComponent<CameraWork>();
         this._animator = GetComponent<Animator>();
     }
@@ -43,39 +47,54 @@ public class ControledCharacter : MonoBehaviourPun
             return;
 
         ControlByKey();
-        ControlSpinByKey();
+    }
+
+    private void FixedUpdate()
+    {
+        if (!photonView.IsMine && PhotonNetwork.IsConnected)
+            return;
+
+        ChangePerspectiveInMouseAction();
+        if (this._arms != null)
+            for (var i = 0; i < this._arms.Length; i++)
+            {
+                this._arms[i].transform.localEulerAngles = this._armEulerAngle[i];
+            }
+    }
+
+    protected void ChangePerspectiveInMouseAction()
+    {
+        var mouseSpinX = Input.GetAxis("Mouse X") * this._sensitivity;
+        var mouseSpinY = Input.GetAxis("Mouse Y") * this._sensitivity;
+
+        var spin = transform.eulerAngles;
+        spin.x -= mouseSpinY;
+        spin.y += mouseSpinX;
+        transform.eulerAngles = spin;
+
     }
 
     protected void ControlByKey()
     {
         var code = InputUtil.GetInputtingKeyCode();
-        var motion = this._characterController.velocity;
+        var motion = this._rigidbody.velocity;
         if(code == KeyCode.W)
         {
             motion = transform.forward;
             _animator.SetBool("walk", true);
+        }else if (code == KeyCode.Space)
+        {
+            _animator.SetBool("aori", true);
+            motion = this._noSpeed;
         }
         else
         {
             motion = this._noSpeed;
             _animator.SetBool("walk", false);
+            _animator.SetBool("aori", false);
         }
         motion *= this._moveSpeed;
-        _characterController.Move(motion);
-    }
-
-    protected void ControlSpinByKey()
-    {
-        var code = InputUtil.GetInputtingKeyCode();
-        var spin = transform.eulerAngles;
-        if (code == KeyCode.D)
-        {
-            spin.y += 1f;
-        }
-        else if (code == KeyCode.A)
-        {
-            spin.y -= 1f;
-        }
-        transform.eulerAngles = spin;
+        this._rigidbody.velocity  = motion;
+        this._rigidbody.angularVelocity = Vector3.zero;
     }
 }
