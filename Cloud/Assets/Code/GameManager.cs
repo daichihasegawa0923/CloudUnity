@@ -8,12 +8,14 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private GameObject _respornPositions;
     // Start is called before the first frame update
     void Start()
     {
         var choicedCharcter = GameObject.FindObjectOfType<CharacterChoice>();
         SceneManager.MoveGameObjectToScene(choicedCharcter.gameObject, SceneManager.GetActiveScene());
-        PhotonNetwork.Instantiate(choicedCharcter.GetGameInstance().name, new Vector3(0, 40, 0), Quaternion.identity, 0);
+        var choicedCharacterInstantiated = PhotonNetwork.Instantiate(choicedCharcter.GetGameInstance().name, new Vector3(0, 40, 0), Quaternion.identity, 0);
+        choicedCharacterInstantiated.transform.position = _respornPositions.transform.Find(PhotonNetwork.CurrentRoom.PlayerCount.ToString()).position;
     }
 
     public override void OnLeftRoom()
