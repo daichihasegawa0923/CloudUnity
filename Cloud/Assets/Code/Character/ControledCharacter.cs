@@ -56,11 +56,6 @@ public class ControledCharacter : MonoBehaviourPun
             return;
 
         ChangePerspectiveInMouseAction();
-        if (this._arms != null)
-            for (var i = 0; i < this._arms.Length; i++)
-            {
-                this._arms[i].transform.localEulerAngles = this._armEulerAngle[i];
-            }
     }
 
     protected void ChangePerspectiveInMouseAction()
@@ -89,16 +84,11 @@ public class ControledCharacter : MonoBehaviourPun
         {
             motion = transform.forward;
             _animator.SetBool("walk", true);
-        }else if (code == KeyCode.Space)
-        {
-            _animator.SetBool("aori", true);
-            motion = this._noSpeed;
         }
         else
         {
             motion = this._noSpeed;
             _animator.SetBool("walk", false);
-            _animator.SetBool("aori", false);
         }
         motion *= this._moveSpeed;
         this._rigidbody.velocity  = motion;
