@@ -25,6 +25,8 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField]
     protected float _moveSpeed = 0.01f;
 
+    [SerializeField] protected Grip _grip;
+
     private void Awake()
     {
         this._rigidbody = GetComponent<Rigidbody>();
@@ -64,16 +66,16 @@ public class ControledCharacter : MonoBehaviourPun
         var mouseSpinY = Input.GetAxis("Mouse Y") * this._sensitivity;
 
         var spin = transform.eulerAngles;
-        spin.x -= mouseSpinY;
-        Debug.Log(spin.x);
-        if (spin.x > 180 && spin.x < 324)
-            spin.x = 325;
+        var neckSpin = this._neck.transform.localEulerAngles;
+        neckSpin.x -= mouseSpinY;
+        if (neckSpin.x > 180 && neckSpin.x < 324)
+            neckSpin.x = 325;
         else if (spin.x < 180 && spin.x > 56)
             spin.x = 55;
         spin.y += mouseSpinX;
         spin.z = 0;
         transform.eulerAngles = spin;
-
+        this._neck.transform.localEulerAngles = neckSpin;
     }
 
     protected void ControlByKey()
@@ -83,15 +85,28 @@ public class ControledCharacter : MonoBehaviourPun
         if(code == KeyCode.W)
         {
             motion = transform.forward;
+            motion.y = this._rigidbody.velocity.y;
             _animator.SetBool("walk", true);
         }
         else
         {
             motion = this._noSpeed;
+            motion.y = this._rigidbody.velocity.y;
             _animator.SetBool("walk", false);
         }
         motion *= this._moveSpeed;
         this._rigidbody.velocity  = motion;
         this._rigidbody.angularVelocity = Vector3.zero;
+
+        if(code == KeyCode.A)
+        {
+            _animator.SetBool("grip", true);
+            _grip.Gripping();
+        }
+        else
+        {
+            _animator.SetBool("grip", false);
+            _grip.Releasing();
+        }
     }
 }
