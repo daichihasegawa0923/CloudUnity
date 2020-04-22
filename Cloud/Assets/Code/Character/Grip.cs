@@ -21,11 +21,11 @@ public class Grip : MonoBehaviour
             return;
 
         _isGrip = true;
+        this._grippedObject.GetComponent<Rigidbody>().isKinematic = false;
         this._hingeJoint = _grippedObject.AddComponent<HingeJoint>();
         this._hingeJoint.connectedBody = GetComponent<Rigidbody>();
         this._hingeJoint.useLimits = true;
         this._hingeJoint.enableCollision = true;
-        this._hingeJoint.breakForce = 1000.0f;
     }
 
     public void Releasing()

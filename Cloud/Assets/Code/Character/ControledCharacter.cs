@@ -29,6 +29,8 @@ public class ControledCharacter : MonoBehaviourPun
 
     [SerializeField] protected Grip _grip;
 
+    [SerializeField] public Vector3 _respornPosition;
+
     private void Awake()
     {
         this._rigidbody = GetComponent<Rigidbody>();
@@ -43,6 +45,8 @@ public class ControledCharacter : MonoBehaviourPun
         {
             _cameraWork.OnStartFollowing();
         }
+
+        _respornPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -53,6 +57,7 @@ public class ControledCharacter : MonoBehaviourPun
 
         ControlByKey();
         Jump();
+        RespornByFall();
     }
 
     private void LateUpdate()
@@ -71,8 +76,8 @@ public class ControledCharacter : MonoBehaviourPun
         var spin = transform.eulerAngles;
         var neckSpin = this._neck.transform.localEulerAngles;
         neckSpin.x -= mouseSpinY;
-        if (neckSpin.x > 180 && neckSpin.x < 324)
-            neckSpin.x = 325;
+        if (neckSpin.x > 180 && neckSpin.x < 344)
+            neckSpin.x = 344;
         else if (neckSpin.x < 180 && neckSpin.x > 86)
             neckSpin.x = 85;
         spin.y += mouseSpinX;
@@ -108,6 +113,15 @@ public class ControledCharacter : MonoBehaviourPun
         {
             _animator.SetBool("grip", false);
             _grip.Releasing();
+        }
+    }
+
+    protected void RespornByFall()
+    {
+        if (transform.position.y < -200)
+        {
+            this._rigidbody.velocity = Vector3.zero;
+            this.transform.position = this._respornPosition;
         }
     }
 
