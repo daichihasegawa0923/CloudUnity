@@ -25,6 +25,8 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField]
     protected float _moveSpeed = 0.01f;
 
+    [SerializeField] protected float _jumpPower = 3.0f;
+
     [SerializeField] protected Grip _grip;
 
     private void Awake()
@@ -50,9 +52,10 @@ public class ControledCharacter : MonoBehaviourPun
             return;
 
         ControlByKey();
+        Jump();
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
             return;
@@ -70,8 +73,8 @@ public class ControledCharacter : MonoBehaviourPun
         neckSpin.x -= mouseSpinY;
         if (neckSpin.x > 180 && neckSpin.x < 324)
             neckSpin.x = 325;
-        else if (spin.x < 180 && spin.x > 56)
-            spin.x = 55;
+        else if (neckSpin.x < 180 && neckSpin.x > 86)
+            neckSpin.x = 85;
         spin.y += mouseSpinX;
         spin.z = 0;
         transform.eulerAngles = spin;
@@ -80,33 +83,50 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected void ControlByKey()
     {
-        var code = InputUtil.GetInputtingKeyCode();
         var motion = this._rigidbody.velocity;
-        if(code == KeyCode.W)
+        if(Input.GetKey(KeyCode.W))
         {
             motion = transform.forward;
-            motion.y = this._rigidbody.velocity.y;
+            motion *= this._moveSpeed;
             _animator.SetBool("walk", true);
         }
-        else
+        else if(Input.GetKeyUp(KeyCode.W))
         {
             motion = this._noSpeed;
-            motion.y = this._rigidbody.velocity.y;
             _animator.SetBool("walk", false);
         }
-        motion *= this._moveSpeed;
+        motion.y = this._rigidbody.velocity.y;
         this._rigidbody.velocity  = motion;
         this._rigidbody.angularVelocity = Vector3.zero;
 
-        if(code == KeyCode.A)
+        if(Input.GetKey(KeyCode.A))
         {
             _animator.SetBool("grip", true);
             _grip.Gripping();
         }
-        else
+        else if (Input.GetKeyUp(KeyCode.A))
         {
             _animator.SetBool("grip", false);
             _grip.Releasing();
         }
+    }
+
+    protected void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            var allRayHit = Physics.RaycastAll(transform.position+transform.up, -transform.up,1.0f);
+            Debug.DrawRay(transform.position, -transform.up,Color.blue);
+            foreach(var hit in allRayHit)
+            {
+                if (!hit.collider.gameObject.Equals(gameObject))
+                    this._rigidbody.velocity += transform.up * this._jumpPower;
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
     }
 }

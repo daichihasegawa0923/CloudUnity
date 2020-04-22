@@ -17,12 +17,15 @@ public class Grip : MonoBehaviour
 
     public void Gripping()
     {
-        if (_isGrip)
+        if (_isGrip || !_grippedObject)
             return;
+
         _isGrip = true;
         this._hingeJoint = _grippedObject.AddComponent<HingeJoint>();
         this._hingeJoint.connectedBody = GetComponent<Rigidbody>();
-        this._hingeJoint.breakForce = 100.0f;
+        this._hingeJoint.useLimits = true;
+        this._hingeJoint.enableCollision = true;
+        this._hingeJoint.breakForce = 1000.0f;
     }
 
     public void Releasing()

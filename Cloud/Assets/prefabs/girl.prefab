@@ -40,7 +40,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1953484008429958073}
-  - component: {fileID: 2440917840259959020}
   m_Layer: 0
   m_Name: Right wrist
   m_TagString: Untagged
@@ -67,19 +66,6 @@ Transform:
   m_Father: {fileID: 6730862158300620583}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 3.892203, y: 4.4983706, z: 3.6610541}
---- !u!65 &2440917840259959020
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 157378746329397327}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.001, y: 0.0027709685, z: 0.001}
-  m_Center: {x: 6.8792563e-12, y: 0.00008901116, z: -1.7484137e-12}
 --- !u!1 &219353979576881019
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,7 +228,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4039501264464593337}
-  - component: {fileID: 2440917839749450366}
   m_Layer: 0
   m_Name: Left wrist
   m_TagString: Untagged
@@ -269,19 +254,6 @@ Transform:
   m_Father: {fileID: 6771699238487446120}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 3.8928058, y: -4.499071, z: -3.6611536}
---- !u!65 &2440917839749450366
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469438290611420846}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.001, y: 0.0027709685, z: 0.001}
-  m_Center: {x: 6.8792563e-12, y: 0.00008901116, z: -1.7484137e-12}
 --- !u!1 &503881868583739953
 GameObject:
   m_ObjectHideFlags: 0
