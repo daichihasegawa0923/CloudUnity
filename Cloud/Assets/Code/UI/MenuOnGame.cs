@@ -13,10 +13,19 @@ public class MenuOnGame : MonoBehaviour
 
     private void Awake()
     {
+        // 音量の初期設定
+        foreach (var audioSouce in FindObjectsOfType<AudioSource>())
+        {
+            audioSouce.volume = PlayerPrefs.GetFloat("sound_volume", 1.0f);
+            _soundVolumeSlider.value = audioSouce.volume;
+        }
         _soundVolumeSlider.onValueChanged.AddListener(value => 
         {
             foreach (var audioSouce in FindObjectsOfType<AudioSource>())
+            {
                 audioSouce.volume = value;
+                PlayerPrefs.SetFloat("sound_volume", value);
+            }
         });
 
         _openClose.onClick.AddListener(() =>

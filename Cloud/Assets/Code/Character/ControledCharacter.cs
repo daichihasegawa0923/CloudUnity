@@ -31,11 +31,15 @@ public class ControledCharacter : MonoBehaviourPun
 
     [SerializeField] public Vector3 _respornPosition;
 
+    [SerializeField] protected GameObject MainCamera { set; get; }
+    [SerializeField] protected Vector3 _cameraDistance;
+
     private void Awake()
     {
         this._rigidbody = GetComponent<Rigidbody>();
         this._cameraWork = GetComponent<CameraWork>();
         this._animator = GetComponent<Animator>();
+        this.MainCamera = FindObjectOfType<Camera>().gameObject;
     }
 
     // Start is called before the first frame update
@@ -58,6 +62,20 @@ public class ControledCharacter : MonoBehaviourPun
         ControlByKey();
         Jump();
         RespornByFall();
+        CameraChase();
+    }
+
+    protected void CameraChase()
+    {
+        if (this.MainCamera != null)
+        {
+            var distance = ((this.transform.position + this._cameraDistance) - MainCamera.transform.position);
+            MainCamera.transform.position += distance * 0.01f;
+            if (Vector3.Distance(Vector3.zero,distance) > 10)
+            {
+                MainCamera.transform.position = this.transform.position + this._cameraDistance;
+            }
+        }
     }
 
     private void LateUpdate()
@@ -65,7 +83,7 @@ public class ControledCharacter : MonoBehaviourPun
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
             return;
 
-        ChangePerspectiveInMouseAction();
+        // ChangePerspectiveInMouseAction();
     }
 
     protected void ChangePerspectiveInMouseAction()
@@ -88,32 +106,28 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected void ControlByKey()
     {
-        var motion = this._rigidbody.velocity;
-        if(Input.GetKey(KeyCode.W))
-        {
-            motion = transform.forward;
-            motion *= this._moveSpeed;
-            _animator.SetBool("walk", true);
-        }
-        else if(Input.GetKeyUp(KeyCode.W))
-        {
-            motion = this._noSpeed;
-            _animator.SetBool("walk", false);
-        }
-        motion.y = this._rigidbody.velocity.y;
-        this._rigidbody.velocity  = motion;
+        // 回転の制限
         this._rigidbody.angularVelocity = Vector3.zero;
 
-        if(Input.GetKey(KeyCode.A))
+        //　クリック時イベント
+        var motion = this._rigidbody.velocity;
+        if (Input.GetMouseButtonDown(0))
         {
-            _animator.SetBool("grip", true);
-            _grip.Gripping();
+            var position = this.GetClickPosition(transform.position);
+            transform.LookAt(position);
+            var spin = transform.eulerAngles;
+            spin.x = 0;
+            spin.z = 0;
+            transform.eulerAngles = spin;
+            motion = position - transform.position;
+            this._rigidbody.velocity = motion;
         }
-        else if (Input.GetKeyUp(KeyCode.A))
-        {
-            _animator.SetBool("grip", false);
-            _grip.Releasing();
-        }
+    }
+
+    protected Vector3 GetClickPosition(Vector3 currentPosition)
+    {
+        var ray = this.MainCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+        return Physics.Raycast(ray, out RaycastHit hit) ? hit.point : currentPosition;
     }
 
     protected void RespornByFall()
