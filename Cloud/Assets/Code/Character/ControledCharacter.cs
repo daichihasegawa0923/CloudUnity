@@ -34,12 +34,15 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField] protected GameObject MainCamera { set; get; }
     [SerializeField] protected Vector3 _cameraDistance;
 
+    private Vector3 _runAimPosition;
+
     private void Awake()
     {
         this._rigidbody = GetComponent<Rigidbody>();
         this._cameraWork = GetComponent<CameraWork>();
         this._animator = GetComponent<Animator>();
         this.MainCamera = FindObjectOfType<Camera>().gameObject;
+        this._respornPosition = transform.position;
     }
 
     // Start is called before the first frame update
@@ -110,18 +113,72 @@ public class ControledCharacter : MonoBehaviourPun
         this._rigidbody.angularVelocity = Vector3.zero;
 
         //　クリック時イベント
-        var motion = this._rigidbody.velocity;
         if (Input.GetMouseButtonDown(0))
         {
-            var position = this.GetClickPosition(transform.position);
-            transform.LookAt(position);
+            this._runAimPosition = this.GetClickPosition(transform.position);
+        }
+
+        // 動き
+        this.OperateMotion();
+    }
+
+    protected void OperateMotion()
+    {
+        if (Vector3.Distance(transform.position, this._runAimPosition) > 0.50f)
+        {
+            transform.LookAt(this._runAimPosition);
             var spin = transform.eulerAngles;
             spin.x = 0;
             spin.z = 0;
             transform.eulerAngles = spin;
-            motion = position - transform.position;
-            this._rigidbody.velocity = motion;
+
+            var speed = (this._runAimPosition - transform.position);
+            if (Vector3.Distance(speed, Vector3.zero) > Vector3.Distance(transform.forward, Vector3.zero))
+                speed = transform.forward;
+
+            speed *= this._moveSpeed;
+
+            speed.y = this._rigidbody.velocity.y;
+            this._rigidbody.velocity = speed;
+
+            if (!this._animator.GetBool("walk"))
+                this._animator.SetBool("walk", true);
+
+            if (this.IsStepIsFront())
+            {
+                var position = transform.forward;
+                position.y += 1;
+                transform.position += position;
+            }
         }
+        else
+        {
+            var motion = this._rigidbody.velocity;
+            motion = Vector3.zero;
+            motion.y = this._rigidbody.velocity.y;
+            this._rigidbody.velocity = motion;
+            if (this._animator.GetBool("walk"))
+                this._animator.SetBool("walk", false);
+        }
+    }
+
+    protected bool IsStepIsFront()
+    {
+        var position_stomach = transform.position + transform.forward * 0.5f;
+        var position_head = position_stomach;
+        position_head.y += 1.0f;
+
+        var ray_stomach = new Ray(position_stomach, transform.forward);
+        var ray_head = new Ray(position_head, transform.forward);
+
+        
+        var isHit_stomach = Physics.Raycast(ray_stomach,0.5f);
+        var isHit_head = Physics.Raycast(ray_head, 0.5f);
+
+        Debug.DrawRay(position_head, transform.forward,Color.blue);
+        Debug.DrawRay(position_stomach, transform.forward, Color.blue);
+
+        return isHit_stomach && !isHit_head;
     }
 
     protected Vector3 GetClickPosition(Vector3 currentPosition)
