@@ -34,7 +34,11 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField] protected GameObject MainCamera { set; get; }
     [SerializeField] protected Vector3 _cameraDistance;
 
+    private bool _isStepup = false;
+
     private Vector3 _runAimPosition;
+
+    [SerializeField] protected GameObject _particle;
 
     private void Awake()
     {
@@ -116,6 +120,17 @@ public class ControledCharacter : MonoBehaviourPun
         if (Input.GetMouseButtonDown(0))
         {
             this._runAimPosition = this.GetClickPosition(transform.position);
+            var point = Instantiate(this._particle);
+            point.transform.position = this._runAimPosition;
+            Destroy(point, 4.0f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            if (_grip.IsGrip)
+                _grip.Releasing();
+            else
+                _grip.Gripping();
         }
 
         // 動き
@@ -132,6 +147,9 @@ public class ControledCharacter : MonoBehaviourPun
             spin.z = 0;
             transform.eulerAngles = spin;
 
+            if (this._isStepup)
+                return;
+
             var speed = (this._runAimPosition - transform.position);
             if (Vector3.Distance(speed, Vector3.zero) > Vector3.Distance(transform.forward, Vector3.zero))
                 speed = transform.forward;
@@ -146,9 +164,7 @@ public class ControledCharacter : MonoBehaviourPun
 
             if (this.IsStepIsFront())
             {
-                var position = transform.forward;
-                position.y += 1;
-                transform.position += position;
+                StartCoroutine("Stepup");
             }
         }
         else
@@ -162,18 +178,40 @@ public class ControledCharacter : MonoBehaviourPun
         }
     }
 
+    private IEnumerator Stepup()
+    {
+        if (this._isStepup)
+            yield break;
+
+        this._isStepup = true;
+        this._animator.SetTrigger("stepup");
+
+        while (!this._animator.GetNextAnimatorStateInfo(1).IsName("stepup"))
+        {
+            yield return new WaitForSeconds(0.001f);
+        }
+        var animationTime = this._animator.GetCurrentAnimatorStateInfo(1).length * 0.55f;
+        yield return new WaitForSeconds(animationTime);
+        var position = transform.forward;
+        position.y += 1.0f;
+        transform.position += position;
+        this._isStepup = false;
+
+    }
+
     protected bool IsStepIsFront()
     {
         var position_stomach = transform.position + transform.forward * 0.5f;
-        var position_head = position_stomach;
+        position_stomach.y -= 0.25f;
+        var position_head = transform.position + transform.forward * 0.5f;
         position_head.y += 1.0f;
 
         var ray_stomach = new Ray(position_stomach, transform.forward);
         var ray_head = new Ray(position_head, transform.forward);
 
         
-        var isHit_stomach = Physics.Raycast(ray_stomach,0.5f);
-        var isHit_head = Physics.Raycast(ray_head, 0.5f);
+        var isHit_stomach = Physics.Raycast(ray_stomach,0.2f);
+        var isHit_head = Physics.Raycast(ray_head, 0.2f);
 
         Debug.DrawRay(position_head, transform.forward,Color.blue);
         Debug.DrawRay(position_stomach, transform.forward, Color.blue);
