@@ -29,7 +29,6 @@ public class RopeGrippedObject : GrippedBase
     public override void Gripped(Grip grip)
     {
         _character = grip.Character;
-        Destroy(grip.HJoint);
         _position = transform.position - _character.transform.position;
     }
 

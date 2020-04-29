@@ -54,10 +54,9 @@ public class ControledCharacter : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            _cameraWork.OnStartFollowing();
+            _respornPosition = transform.position;
         }
 
-        _respornPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -192,8 +191,8 @@ public class ControledCharacter : MonoBehaviourPun
         }
         var animationTime = this._animator.GetCurrentAnimatorStateInfo(1).length * 0.55f;
         yield return new WaitForSeconds(animationTime);
-        var position = transform.forward;
-        position.y += 1.0f;
+        var position = transform.forward*1.50f;
+        position.y += 2.0f;
         transform.position += position;
         this._isStepup = false;
 
@@ -201,10 +200,10 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected bool IsStepIsFront()
     {
-        var position_stomach = transform.position + transform.forward * 0.5f;
+        var position_stomach = transform.position + transform.forward * 2f;
         position_stomach.y -= 0.25f;
-        var position_head = transform.position + transform.forward * 0.5f;
-        position_head.y += 1.0f;
+        var position_head = transform.position + transform.forward * 2f;
+        position_head.y += 1.75f;
 
         var ray_stomach = new Ray(position_stomach, transform.forward);
         var ray_head = new Ray(position_head, transform.forward);
@@ -215,7 +214,7 @@ public class ControledCharacter : MonoBehaviourPun
 
         Debug.DrawRay(position_head, transform.forward,Color.blue);
         Debug.DrawRay(position_stomach, transform.forward, Color.blue);
-
+        Debug.Log(isHit_stomach);
         return isHit_stomach && !isHit_head;
     }
 
@@ -225,12 +224,17 @@ public class ControledCharacter : MonoBehaviourPun
         return Physics.Raycast(ray, out RaycastHit hit) ? hit.point : currentPosition;
     }
 
+    public void Resporn()
+    {
+        this._rigidbody.velocity = Vector3.zero;
+        this.transform.position = this._respornPosition;
+    }
+
     protected void RespornByFall()
     {
         if (transform.position.y < -200)
         {
-            this._rigidbody.velocity = Vector3.zero;
-            this.transform.position = this._respornPosition;
+            this.Resporn();
         }
     }
 

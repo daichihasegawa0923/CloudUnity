@@ -6,11 +6,9 @@ public class Grip : MonoBehaviour
 {
     [SerializeField] private bool isGrip;
     [SerializeField] protected GameObject _grippedObject;
-    [SerializeField] private HingeJoint hJoint;
     [SerializeField] private ControledCharacter character;
 
     public ControledCharacter Character { get => character; protected set => character = value; }
-    public HingeJoint HJoint { get => hJoint; set => hJoint = value; }
     public bool IsGrip { get => isGrip; private set => isGrip = value; }
 
     private void Update()
@@ -30,7 +28,6 @@ public class Grip : MonoBehaviour
     public void Releasing()
     {
         IsGrip = false;
-        Destroy(this.HJoint);
 
         if (_grippedObject != null && _grippedObject.GetComponent<GrippedBase>())
             _grippedObject.GetComponent<GrippedBase>().Released(this);

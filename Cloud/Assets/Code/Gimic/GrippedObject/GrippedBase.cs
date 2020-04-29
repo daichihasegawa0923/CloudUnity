@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class GrippedBase : MonoBehaviour
 {
     [SerializeField] protected List<Collider> _colliders;
-
+    protected Rigidbody _rigidbody;
     public virtual void Gripped(Grip grip)
     {
-        grip.HJoint = gameObject.AddComponent<HingeJoint>();
-        grip.HJoint.connectedBody = grip.gameObject.GetComponent<Rigidbody>();
-        grip.HJoint.useLimits = true;
+        transform.parent = grip.transform;
+        this._rigidbody = GetComponent<Rigidbody>();
+        Destroy(this._rigidbody);
         this._colliders.ForEach(c => c.enabled = false);
     }
 
     public virtual void Released(Grip grip)
     {
-        Destroy(grip.HJoint);
+        transform.parent = null;
+        var rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody = this._rigidbody;
         this._colliders.ForEach(c => c.enabled = true);
     }
 }
