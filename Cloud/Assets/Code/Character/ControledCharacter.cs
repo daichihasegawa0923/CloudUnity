@@ -33,12 +33,13 @@ public class ControledCharacter : MonoBehaviourPun
 
     [SerializeField] protected GameObject MainCamera { set; get; }
     [SerializeField] protected Vector3 _cameraDistance;
+    private KeyControlOperator _keyControlOperator;
 
     private bool _isStepup = false;
-
-    private Vector3 _runAimPosition;
+    private bool _canStepup = false;
 
     [SerializeField] protected GameObject _particle;
+    private GameObject _currentParticle;
 
     private void Awake()
     {
@@ -47,6 +48,7 @@ public class ControledCharacter : MonoBehaviourPun
         this._animator = GetComponent<Animator>();
         this.MainCamera = FindObjectOfType<Camera>().gameObject;
         this._respornPosition = transform.position;
+        this._keyControlOperator = FindObjectOfType<KeyControlOperator>();
     }
 
     // Start is called before the first frame update
@@ -118,16 +120,46 @@ public class ControledCharacter : MonoBehaviourPun
         //　クリック時イベント
         if (Input.GetMouseButtonDown(0))
         {
-            this._runAimPosition = this.GetClickPosition(transform.position);
-            var point = Instantiate(this._particle);
-            point.transform.position = this._runAimPosition;
-            Destroy(point, 4.0f);
+            if (_currentParticle != null)
+                Destroy(_currentParticle);
+
+            if (this._canStepup)
+                this._canStepup = false;
+
+            _currentParticle = Instantiate(this._particle);
+            _currentParticle.transform.position = this.GetClickPosition(transform.position); ;
+        }
+
+        // 掴む処理
+        if (this._grip.GrippedObject != null && !this._grip.IsGrip)
+        {
+            if (!this._keyControlOperator.A_grip.activeInHierarchy)
+                this._keyControlOperator.A_grip.SetActive(true);
+        }
+        else if (this._grip.IsGrip)
+        {
+            if (this._keyControlOperator.A_grip.activeInHierarchy)
+                this._keyControlOperator.A_grip.SetActive(false);
+
+            if (!this._keyControlOperator.A_release.activeInHierarchy)
+                this._keyControlOperator.A_release.SetActive(true);
+        }
+        else
+        {
+            if (this._keyControlOperator.A_grip.activeInHierarchy)
+                this._keyControlOperator.A_grip.SetActive(false);
+            if (this._keyControlOperator.A_release.activeInHierarchy)
+                this._keyControlOperator.A_release.SetActive(false);
         }
 
         if (Input.GetKeyDown(KeyCode.A))
         {
             if (_grip.IsGrip)
+            {
                 _grip.Releasing();
+                if (this._keyControlOperator.A_release.activeInHierarchy)
+                    this._keyControlOperator.A_release.SetActive(false);
+            }
             else
                 _grip.Gripping();
         }
@@ -138,9 +170,32 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected void OperateMotion()
     {
-        if (Vector3.Distance(transform.position, this._runAimPosition) > 0.50f)
+
+        if (this.IsStepIsFront() || this._canStepup)
         {
-            transform.LookAt(this._runAimPosition);
+            this._canStepup = true;
+            if (!_keyControlOperator.W_stepup.activeInHierarchy)
+                this._keyControlOperator.W_stepup.SetActive(true);
+            if(Input.GetKeyDown(KeyCode.W) && !this._isStepup)
+            {
+                this._canStepup = false;
+                StartCoroutine("Stepup");
+            }
+            return;
+        }
+        else
+        {
+            this._canStepup = false;
+            if (_keyControlOperator.W_stepup.activeInHierarchy)
+                this._keyControlOperator.W_stepup.SetActive(false);
+        }
+
+        if (this._currentParticle == null)
+            return;
+
+        if (Vector3.Distance(transform.position, this._currentParticle.gameObject.transform.position) > 0.50f)
+        {
+            transform.LookAt(this._currentParticle.gameObject.transform.position);
             var spin = transform.eulerAngles;
             spin.x = 0;
             spin.z = 0;
@@ -149,7 +204,7 @@ public class ControledCharacter : MonoBehaviourPun
             if (this._isStepup)
                 return;
 
-            var speed = (this._runAimPosition - transform.position);
+            var speed = (this._currentParticle.gameObject.transform.position - transform.position);
             if (Vector3.Distance(speed, Vector3.zero) > Vector3.Distance(transform.forward, Vector3.zero))
                 speed = transform.forward;
 
@@ -160,11 +215,6 @@ public class ControledCharacter : MonoBehaviourPun
 
             if (!this._animator.GetBool("walk"))
                 this._animator.SetBool("walk", true);
-
-            if (this.IsStepIsFront())
-            {
-                StartCoroutine("Stepup");
-            }
         }
         else
         {
@@ -191,7 +241,7 @@ public class ControledCharacter : MonoBehaviourPun
         }
         var animationTime = this._animator.GetCurrentAnimatorStateInfo(1).length * 0.55f;
         yield return new WaitForSeconds(animationTime);
-        var position = transform.forward*1.50f;
+        var position = transform.forward*2f;
         position.y += 2.0f;
         transform.position += position;
         this._isStepup = false;
@@ -200,22 +250,21 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected bool IsStepIsFront()
     {
-        var position_stomach = transform.position + transform.forward * 2f;
+        var position_stomach = transform.position + transform.forward * 1f;
         position_stomach.y -= 0.25f;
-        var position_head = transform.position + transform.forward * 2f;
+        var position_head = transform.position + transform.forward * 1f;
         position_head.y += 1.75f;
 
         var ray_stomach = new Ray(position_stomach, transform.forward);
         var ray_head = new Ray(position_head, transform.forward);
 
         
-        var isHit_stomach = Physics.Raycast(ray_stomach,0.2f);
-        var isHit_head = Physics.Raycast(ray_head, 0.2f);
+        var isHit_stomach = Physics.RaycastAll(ray_stomach,0.05f);
+        var isHit_head = Physics.RaycastAll(ray_head, 0.05f);
 
         Debug.DrawRay(position_head, transform.forward,Color.blue);
         Debug.DrawRay(position_stomach, transform.forward, Color.blue);
-        Debug.Log(isHit_stomach);
-        return isHit_stomach && !isHit_head;
+        return isHit_stomach.Length > 0 && !(isHit_head.Length > 0);
     }
 
     protected Vector3 GetClickPosition(Vector3 currentPosition)

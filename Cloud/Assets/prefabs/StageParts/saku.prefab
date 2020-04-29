@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 3438614437303356824}
   - component: {fileID: 2736122691243989323}
   - component: {fileID: 6690673244542252475}
-  - component: {fileID: 192531755891488191}
   m_Layer: 0
   m_Name: default
   m_TagString: Untagged
@@ -79,20 +78,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &192531755891488191
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2414392455522896174}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 14
-  m_Mesh: {fileID: -2432090755550338912, guid: 114d4b95a41218b45b8ff307117012c1, type: 3}
 --- !u!1 &8182459477407804595
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,6 +87,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5176525285624733344}
+  - component: {fileID: 8697256012465411847}
   m_Layer: 0
   m_Name: saku
   m_TagString: Untagged
@@ -124,3 +110,16 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &8697256012465411847
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8182459477407804595}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.30112082, y: 6.264927, z: 2.0250225}
+  m_Center: {x: -0.06988791, y: 6.4531097, z: 0}

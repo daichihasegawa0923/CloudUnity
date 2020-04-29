@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 6520832887401182010}
   - component: {fileID: 6520832887401182009}
   m_Layer: 0
-  m_Name: character_mini
+  m_Name: character_catman
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -507,7 +507,7 @@ MonoBehaviour:
   _armEulerAngle: []
   _neck: {fileID: 1683765706884567698}
   _sensitivity: 4
-  _moveSpeed: 2
+  _moveSpeed: 4
   _jumpPower: 3
   _grip: {fileID: 6520832886214260537}
   _respornPosition: {x: 0, y: 0, z: 0}

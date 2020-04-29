@@ -10,6 +10,7 @@ public class Grip : MonoBehaviour
 
     public ControledCharacter Character { get => character; protected set => character = value; }
     public bool IsGrip { get => isGrip; private set => isGrip = value; }
+    public GameObject GrippedObject { private set => this._grippedObject = value; get => _grippedObject; }
 
     private void Update()
     {
