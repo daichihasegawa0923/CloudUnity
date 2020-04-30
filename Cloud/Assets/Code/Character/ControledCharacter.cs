@@ -90,26 +90,6 @@ public class ControledCharacter : MonoBehaviourPun
     {
         if (!photonView.IsMine && PhotonNetwork.IsConnected)
             return;
-
-        // ChangePerspectiveInMouseAction();
-    }
-
-    protected void ChangePerspectiveInMouseAction()
-    {
-        var mouseSpinX = Input.GetAxis("Mouse X") * this._sensitivity;
-        var mouseSpinY = Input.GetAxis("Mouse Y") * this._sensitivity;
-
-        var spin = transform.eulerAngles;
-        var neckSpin = this._neck.transform.localEulerAngles;
-        neckSpin.x -= mouseSpinY;
-        if (neckSpin.x > 180 && neckSpin.x < 344)
-            neckSpin.x = 344;
-        else if (neckSpin.x < 180 && neckSpin.x > 86)
-            neckSpin.x = 85;
-        spin.y += mouseSpinX;
-        spin.z = 0;
-        transform.eulerAngles = spin;
-        this._neck.transform.localEulerAngles = neckSpin;
     }
 
     protected void ControlByKey()
@@ -218,6 +198,7 @@ public class ControledCharacter : MonoBehaviourPun
         }
         else
         {
+            Destroy(_currentParticle.gameObject);
             var motion = this._rigidbody.velocity;
             motion = Vector3.zero;
             motion.y = this._rigidbody.velocity.y;
@@ -250,9 +231,9 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected bool IsStepIsFront()
     {
-        var position_stomach = transform.position + transform.forward * 1.5f;
+        var position_stomach = transform.position + transform.forward * 0.5f;
         position_stomach.y -= 0.25f;
-        var position_head = transform.position + transform.forward * 1.5f;
+        var position_head = transform.position + transform.forward * 0.5f;
         position_head.y += 1.75f;
 
         var ray_stomach = new Ray(position_stomach, transform.forward);
