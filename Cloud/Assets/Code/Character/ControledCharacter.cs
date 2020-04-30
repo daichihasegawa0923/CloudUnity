@@ -250,9 +250,9 @@ public class ControledCharacter : MonoBehaviourPun
 
     protected bool IsStepIsFront()
     {
-        var position_stomach = transform.position + transform.forward * 1f;
+        var position_stomach = transform.position + transform.forward * 1.5f;
         position_stomach.y -= 0.25f;
-        var position_head = transform.position + transform.forward * 1f;
+        var position_head = transform.position + transform.forward * 1.5f;
         position_head.y += 1.75f;
 
         var ray_stomach = new Ray(position_stomach, transform.forward);
