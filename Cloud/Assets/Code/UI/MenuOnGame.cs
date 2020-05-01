@@ -9,14 +9,17 @@ public class MenuOnGame : MonoBehaviour
     [SerializeField] protected Button _openClose;
     [SerializeField] protected Slider _soundVolumeSlider;
 
-    public bool IsMenuOpen { private set; get; }
+    public bool IsMenuOpen { private set; get; } = false;
 
     [SerializeField] private float _panelMove = 400;
 
+    [SerializeField] private Image _openCloseButtonImage;
+    [SerializeField] private Sprite _humbergerButton;
+    [SerializeField] private Sprite _closeButton;
+
+
     private void Awake()
     {
-        // メニューは閉じている
-        this.IsMenuOpen = false;
 
         // 音量の初期設定
         foreach (var audioSouce in FindObjectsOfType<AudioSource>())
@@ -35,18 +38,17 @@ public class MenuOnGame : MonoBehaviour
 
         _openClose.onClick.AddListener(() =>
         {
-            var buttonText = _openClose.gameObject.transform.Find("Text").gameObject.GetComponent<Text>();
             var panelPosition = _panel.transform.position;
-            if (buttonText.text == "Menu")
+            if (!this.IsMenuOpen)
             {
                 _panel.SetActive(true);
-                buttonText.text = "Close";
+                _openCloseButtonImage.sprite = _closeButton;
                 this.IsMenuOpen = true;
             }
             else
             {
                 _panel.SetActive(false);
-                buttonText.text = "Menu";
+                _openCloseButtonImage.sprite = _humbergerButton;
                 this.IsMenuOpen = false;
             }
 
