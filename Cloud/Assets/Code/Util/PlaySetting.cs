@@ -16,4 +16,6 @@ public class PlaySetting
     /// Resourcesフォルダから呼び出す操作キャラクターの名前
     /// </summary>
     public static string playCharacterResoucesName;
+
+    public static string playSceneName;
 }
