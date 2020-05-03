@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class MenuOnGame : MonoBehaviour
 {
@@ -20,6 +21,11 @@ public class MenuOnGame : MonoBehaviour
 
     private void Awake()
     {
+        // MenuButtonのアニメーション
+        var menuButtonScale = this._openClose.transform.localScale;
+        this._openClose.transform.localScale = Vector3.zero;
+        DOTween.Sequence().Append(this._openClose.transform.DOScale(menuButtonScale*1.2f, 1.0f))
+        .Append(this._openClose.transform.DOScale(menuButtonScale, 0.5f));
 
         // 音量の初期設定
         foreach (var audioSouce in FindObjectsOfType<AudioSource>())
