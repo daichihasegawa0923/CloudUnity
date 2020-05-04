@@ -95,7 +95,7 @@ public class StageSelectManager : MonoBehaviour
         {
             if(s.IsSelected)
             {
-                PlaySetting.playSceneName = s.LoadSceneName;
+                PlaySetting.playSceneName = s.Name;
                 return;
             }
         });

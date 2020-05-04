@@ -20,7 +20,7 @@ public class SelectedStage : MonoBehaviour
 
     public Image CheckOrEmptyImage { get => _checkOrEmptyImage; set => _checkOrEmptyImage = value; }
 
-    public string LoadSceneName;
+    public string Name;
 
     public void Check()
     {

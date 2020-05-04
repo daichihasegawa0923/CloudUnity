@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         base.OnLeftRoom();
         SceneManager.LoadScene(0);
     }
-
+    
     private void LoadArena()
     {
         if (!PhotonNetwork.IsMasterClient)
@@ -54,6 +54,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log(PhotonNetwork.CurrentRoom.Name);
     }
 }

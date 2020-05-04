@@ -166,6 +166,7 @@ MonoBehaviour:
   _gameVersion: 1
   _progressPanel: {fileID: 454040823}
   _controlPanel: {fileID: 1084603384}
+  _maxPlayerPerRoom: 4
 --- !u!1 &76937341
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,7 +269,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -290}
+  m_AnchoredPosition: {x: 0, y: -240}
   m_SizeDelta: {x: 306.8, y: 51}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &281625810
