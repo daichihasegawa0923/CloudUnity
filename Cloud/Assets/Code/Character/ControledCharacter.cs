@@ -36,7 +36,6 @@ public class ControledCharacter : MonoBehaviourPun
     private KeyControlOperator _keyControlOperator;
 
     private bool _isStepup = false;
-    private bool _canStepup = false;
 
     [SerializeField] protected GameObject _particle;
     private GameObject _currentParticle;
@@ -103,11 +102,8 @@ public class ControledCharacter : MonoBehaviourPun
             if (_currentParticle != null)
                 Destroy(_currentParticle);
 
-            if (this._canStepup)
-                this._canStepup = false;
-
             _currentParticle = Instantiate(this._particle);
-            _currentParticle.transform.position = this.GetClickPosition(transform.position); ;
+            _currentParticle.transform.position = this.GetClickPosition(transform.position);
         }
 
         // 掴む処理
@@ -151,21 +147,17 @@ public class ControledCharacter : MonoBehaviourPun
     protected void OperateMotion()
     {
 
-        if (this.IsStepIsFront() || this._canStepup)
+        if (this.IsStepIsFront())
         {
-            this._canStepup = true;
             if (!_keyControlOperator.W_stepup.activeInHierarchy)
                 this._keyControlOperator.W_stepup.SetActive(true);
             if(Input.GetKeyDown(KeyCode.W) && !this._isStepup)
             {
-                this._canStepup = false;
                 StartCoroutine("Stepup");
             }
-            return;
         }
         else
         {
-            this._canStepup = false;
             if (_keyControlOperator.W_stepup.activeInHierarchy)
                 this._keyControlOperator.W_stepup.SetActive(false);
         }
@@ -188,7 +180,8 @@ public class ControledCharacter : MonoBehaviourPun
             if (Vector3.Distance(speed, Vector3.zero) > Vector3.Distance(transform.forward, Vector3.zero))
                 speed = transform.forward;
 
-            speed *= this._moveSpeed;
+            // 目の前に登れそうな段差があるときはスピードを0にする
+            speed *= this.IsStepIsFront() ? 0 : this._moveSpeed;
 
             speed.y = this._rigidbody.velocity.y;
             this._rigidbody.velocity = speed;
@@ -240,8 +233,8 @@ public class ControledCharacter : MonoBehaviourPun
         var ray_head = new Ray(position_head, transform.forward);
 
         
-        var isHit_stomach = Physics.RaycastAll(ray_stomach,0.05f);
-        var isHit_head = Physics.RaycastAll(ray_head, 0.05f);
+        var isHit_stomach = Physics.RaycastAll(ray_stomach,0.6f);
+        var isHit_head = Physics.RaycastAll(ray_head, 0.6f);
 
         Debug.DrawRay(position_head, transform.forward,Color.blue);
         Debug.DrawRay(position_stomach, transform.forward, Color.blue);
