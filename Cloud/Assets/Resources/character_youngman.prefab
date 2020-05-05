@@ -480,6 +480,7 @@ GameObject:
   - component: {fileID: 6102322776804698983}
   - component: {fileID: 6102322776804698982}
   - component: {fileID: 6102322776804698981}
+  - component: {fileID: 1507820071644446910}
   m_Layer: 0
   m_Name: character_youngman
   m_TagString: Untagged
@@ -626,9 +627,39 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: 6102322776804698982}
   - {fileID: 6102322776804698983}
+  - {fileID: 1507820071644446910}
   viewIdField: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &1507820071644446910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2850254294608662976}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 2
+    Name: walk
+  - Type: 4
+    SynchronizeType: 2
+    Name: grip
+  - Type: 9
+    SynchronizeType: 2
+    Name: stepup
+  m_SynchronizeLayers:
+  - SynchronizeType: 2
+    LayerIndex: 0
+  - SynchronizeType: 2
+    LayerIndex: 1
 --- !u!1 &3019953019200281535
 GameObject:
   m_ObjectHideFlags: 0

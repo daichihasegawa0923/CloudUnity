@@ -4,20 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private GameObject _playerPrefab;
+    [SerializeField] private Text _idText;
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.Instantiate(this._playerPrefab.name, new Vector3(0, 4, 0), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(PlaySetting.playCharacterResoucesName, new Vector3(0, 4, 0), Quaternion.identity, 0);
+        this._idText.text = PhotonNetwork.CurrentRoom.Name;
     }
 
     public override void OnLeftRoom()
     {
         base.OnLeftRoom();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("ModeChoose");
     }
     
     private void LoadArena()
@@ -54,6 +56,5 @@ public class GameManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(PhotonNetwork.CurrentRoom.Name);
     }
 }

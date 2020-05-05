@@ -10,7 +10,17 @@ public class CharacterChooser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _selectedStages.ForEach(selectedStage => 
+        // 第一要素だけチェックを付ける
+        _selectedStages[0].Check();
+        PlaySetting.playCharacterResoucesName = _selectedStages[0].Name;
+
+        // イベントハンドラの追加
+        this.AddEvent();
+    }
+
+    private void AddEvent()
+    {
+        _selectedStages.ForEach(selectedStage =>
         {
             var eventTrigger = selectedStage.CheckOrEmptyImage.gameObject.AddComponent<EventTrigger>();
             var entry = new EventTrigger.Entry();
@@ -19,15 +29,10 @@ public class CharacterChooser : MonoBehaviour
             entry.callback.AddListener((be) => {
                 _selectedStages.ForEach(selectedStages2 => selectedStages2.RemoveCheck());
                 selectedStage.Check();
+                PlaySetting.playCharacterResoucesName = selectedStage.Name;
             });
 
             eventTrigger.triggers.Add(entry);
         });
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

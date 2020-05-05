@@ -10,7 +10,7 @@ public class PlaySetting
     public enum GameMode {treasure,battle};
     public static GameMode gameMode = GameMode.treasure;
     public static bool isMaster = true;
-    public static byte maxPlayerNum = 1;
+    public static byte maxPlayerNum = 2;
 
     /// <summary>
     /// Resourcesフォルダから呼び出す操作キャラクターの名前

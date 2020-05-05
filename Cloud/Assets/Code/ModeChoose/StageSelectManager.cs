@@ -18,6 +18,10 @@ public class StageSelectManager : MonoBehaviour
 
     [SerializeField] private Text _modeText;
 
+    [SerializeField] private Text _playerNumberText;
+    [SerializeField] private byte _minimumPlayerNumber = 2;
+    [SerializeField] private byte _maxPlayerNumber = 4;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,6 +103,23 @@ public class StageSelectManager : MonoBehaviour
                 return;
             }
         });
+    }
+
+    public void SetPlayerSettingIsMaster(bool isMaster)
+    {
+        PlaySetting.isMaster = isMaster;
+    }
+
+    public void ChangePlayerMaxNum(int change)
+    {
+        PlaySetting.maxPlayerNum += (byte)change;
+
+        if (PlaySetting.maxPlayerNum > this._maxPlayerNumber)
+            PlaySetting.maxPlayerNum = this._maxPlayerNumber;
+        else if (PlaySetting.maxPlayerNum < this._minimumPlayerNumber)
+            PlaySetting.maxPlayerNum = this._minimumPlayerNumber;
+
+        _playerNumberText.text = PlaySetting.maxPlayerNum.ToString();
     }
 
     // Update is called once per frame

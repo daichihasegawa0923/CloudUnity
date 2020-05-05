@@ -29,7 +29,6 @@ public class SelectedStage : MonoBehaviour
 
     public void RemoveCheck()
     {
-        Debug.Log("remove");
         this._checkOrEmptyImage.sprite = _emptySprite;
     }
 
