@@ -78,10 +78,6 @@ public class ControledCharacter : MonoBehaviourPun
         {
             var distance = ((this.transform.position + this._cameraDistance) - MainCamera.transform.position);
             MainCamera.transform.position += distance * 0.01f;
-            if (Vector3.Distance(Vector3.zero,distance) > 10)
-            {
-                MainCamera.transform.position = this.transform.position + this._cameraDistance;
-            }
         }
     }
 

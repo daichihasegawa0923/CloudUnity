@@ -12,10 +12,6 @@ public class Grip : MonoBehaviour
     public bool IsGrip { get => isGrip; private set => isGrip = value; }
     public GameObject GrippedObject { private set => this._grippedObject = value; get => _grippedObject; }
 
-    private void Update()
-    {
-    }
-
     public void Gripping()
     {
         if (IsGrip || !_grippedObject || _grippedObject == this.Character.gameObject)
@@ -38,7 +34,7 @@ public class Grip : MonoBehaviour
     {
         if (IsGrip)
             return;
-        if(other.gameObject.GetComponent<Rigidbody>())
+        if(other.gameObject.GetComponent<GrippedBase>())
             _grippedObject = other.gameObject;
     }
 
