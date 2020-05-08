@@ -97,7 +97,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (PlaySetting.isMaster)
         {
             var roomNumber = this._roomInfos != null ? this._roomInfos.Count.ToString() : "0";
-            PhotonNetwork.CreateRoom(roomNumber);
+            PhotonNetwork.CreateRoom(roomNumber,new RoomOptions() { MaxPlayers = PlaySetting.maxPlayerNum});
         }
     }
 }

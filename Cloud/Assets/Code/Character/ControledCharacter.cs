@@ -161,7 +161,15 @@ public class ControledCharacter : MonoBehaviourPun
         if (this._currentParticle == null)
             return;
 
-        if (Vector3.Distance(transform.position, this._currentParticle.gameObject.transform.position) > 0.50f)
+        var transformPositionXZ = Vector2.zero;
+        transformPositionXZ.x = transform.position.x;
+        transformPositionXZ.y = transform.position.z;
+
+        var currentPositionXZ = Vector2.zero;
+        currentPositionXZ.x = this._currentParticle.gameObject.transform.position.x;
+        currentPositionXZ.y = this._currentParticle.gameObject.transform.position.z;
+
+        if (Vector2.Distance(transformPositionXZ, currentPositionXZ) > 0.50f)
         {
             transform.LookAt(this._currentParticle.gameObject.transform.position);
             var spin = transform.eulerAngles;
@@ -273,6 +281,5 @@ public class ControledCharacter : MonoBehaviourPun
 
     private void OnCollisionEnter(Collision collision)
     {
-
     }
 }

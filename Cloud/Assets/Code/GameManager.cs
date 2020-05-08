@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Text _idText;
+    [SerializeField] private GameObject _respornPositions;
     // Start is called before the first frame update
     void Start()
     {
