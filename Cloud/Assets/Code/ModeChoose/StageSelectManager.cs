@@ -35,6 +35,7 @@ public class StageSelectManager : MonoBehaviour
     private void InitializeStages(GameObject listsParentObject,List<SelectedStage> stages)
     {
         listsParentObject.SetActive(true);
+
         if (stages.Count > 0)
             stages[0].Check();
 
@@ -47,11 +48,13 @@ public class StageSelectManager : MonoBehaviour
         {
             _modeText.text = "バトルモード";
             this.InitializeStages(this._battleModeStagesParent,this._battleModeStages);
+            this._treasureModeStagesParent.SetActive(false);
         }
         else
         {
             _modeText.text = "宝探しモード";
             this.InitializeStages(this._treasureModeStagesParent, this._treasureModeStages);
+            this._battleModeStagesParent.SetActive(false);
         }
     }
 
@@ -59,14 +62,19 @@ public class StageSelectManager : MonoBehaviour
     {
         stages.ForEach(s =>
         {
+            // 既にイベントが降られているとき、イベントを追加しない
+            if (s.CheckOrEmptyImage.GetComponent<EventTrigger>())
+                return;
+
             var trigger = s.CheckOrEmptyImage.gameObject.AddComponent<EventTrigger>();
+
             var entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerClick;
 
 
             entry.callback.AddListener(be =>
             {
-                _selectedStages.ForEach(s2 => s2.RemoveCheck());
+                stages.ForEach(s2 => s2.RemoveCheck());
                 s.Check();
             });
 
@@ -93,16 +101,29 @@ public class StageSelectManager : MonoBehaviour
         });
     }
 
-    public void SetSelectedStageName()
+    public void SetSelectedStage(List<SelectedStage> selectedStages)
     {
-        _selectedStages.ForEach(s=>
+        selectedStages.ForEach(s =>
         {
-            if(s.IsSelected)
+            if (s.IsSelected)
             {
+                Debug.Log(s.Name);
                 PlaySetting.playSceneName = s.Name;
                 return;
             }
         });
+    }
+
+    public void SetSelectedStagesToPlaySettings()
+    {
+        if(PlaySetting.gameMode == PlaySetting.GameMode.battle)
+        {
+            this.SetSelectedStage(this._battleModeStages);
+        }
+        else
+        {
+            this.SetSelectedStage(this._treasureModeStages);
+        }
     }
 
     public void SetPlayerSettingIsMaster(bool isMaster)

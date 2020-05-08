@@ -6,9 +6,7 @@ public class RopeGrippedObject : GrippedBase
 {
     [SerializeField] private Vector3 _position;
     [SerializeField] private ControledCharacter _character;
-
-    [SerializeField] private Rigidbody _rigidbody;
-
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -28,6 +26,7 @@ public class RopeGrippedObject : GrippedBase
 
     public override void Gripped(Grip grip)
     {
+        photonView.RequestOwnership();
         _character = grip.Character;
         _position = transform.position - _character.transform.position;
     }

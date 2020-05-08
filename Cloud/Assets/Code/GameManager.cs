@@ -9,11 +9,15 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Text _idText;
-    [SerializeField] private GameObject _respornPositions;
+    [SerializeField] private GameObject[] _respornPositions;
     // Start is called before the first frame update
     void Start()
     {
-        PhotonNetwork.Instantiate(PlaySetting.playCharacterResoucesName, new Vector3(0, 4, 0), Quaternion.identity, 0);
+        PhotonNetwork.Instantiate(PlaySetting.playCharacterResoucesName,
+            _respornPositions[PhotonNetwork.CurrentRoom.PlayerCount - 1].transform.position,
+            Quaternion.identity,
+            0);
+
         this._idText.text = PhotonNetwork.CurrentRoom.Name;
     }
 

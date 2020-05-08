@@ -27,7 +27,10 @@ public class Grip : MonoBehaviour
         IsGrip = false;
 
         if (_grippedObject != null && _grippedObject.GetComponent<GrippedBase>())
+        {
             _grippedObject.GetComponent<GrippedBase>().Released(this);
+            _grippedObject = null;
+        }
     }
 
     private void OnTriggerStay(Collider other)

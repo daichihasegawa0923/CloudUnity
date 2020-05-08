@@ -198,6 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6344fb20bdeec914bb723bb40c1301ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _stageSelectManager: {fileID: 3121903153822040582}
 --- !u!4 &105851082
 Transform:
   m_ObjectHideFlags: 0
@@ -448,7 +449,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TreasureStageSelect
+          m_StringArgument: StageSelect
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 105851081}
@@ -1843,7 +1844,7 @@ PrefabInstance:
     - target: {fileID: 4697140101231812026, guid: 6932cfd1e7ffd3f40b1dca9231ffe8d4,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: TreasureStageSelect
+      value: StageSelect
       objectReference: {fileID: 0}
     - target: {fileID: 4697140102879238809, guid: 6932cfd1e7ffd3f40b1dca9231ffe8d4,
         type: 3}
@@ -2052,7 +2053,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: TreasureStageSelect
+          m_StringArgument: StageSelect
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 105851081}
@@ -3686,10 +3687,15 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 58620489901360360, guid: 443095af0eebfab4db9b0bef093c6e42,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetSelectedStagesToPlaySettings
+      objectReference: {fileID: 0}
     - target: {fileID: 3121903153536726488, guid: 443095af0eebfab4db9b0bef093c6e42,
         type: 3}
       propertyPath: m_Name
-      value: TreasureStageSelect
+      value: StageSelect
       objectReference: {fileID: 0}
     - target: {fileID: 3121903153536726488, guid: 443095af0eebfab4db9b0bef093c6e42,
         type: 3}
@@ -3801,36 +3807,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _treasureModeStages.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _battleModeStages.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _treasureModeStages.Array.data[0]
-      value: 
-      objectReference: {fileID: 3121903153822040581}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _battleModeStages.Array.data[0]
-      value: 
-      objectReference: {fileID: 3121903153822040581}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _battleModeStagesParent
-      value: 
-      objectReference: {fileID: 3121903153822040580}
-    - target: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
-        type: 3}
-      propertyPath: _treasureModeStagesParent
-      value: 
-      objectReference: {fileID: 3121903153822040580}
     - target: {fileID: 3121903153760299358, guid: 443095af0eebfab4db9b0bef093c6e42,
         type: 3}
       propertyPath: Name
@@ -3906,6 +3882,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3854668700167191580, guid: 443095af0eebfab4db9b0bef093c6e42,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetSelectedStagesToPlaySettings
+      objectReference: {fileID: 0}
     - target: {fileID: 7673186439429534897, guid: 443095af0eebfab4db9b0bef093c6e42,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -3949,24 +3930,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3121903153822040578}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3121903153822040580 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3121903153844130582, guid: 443095af0eebfab4db9b0bef093c6e42,
-    type: 3}
-  m_PrefabInstance: {fileID: 3121903153822040578}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3121903153822040581 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3121903153760299358, guid: 443095af0eebfab4db9b0bef093c6e42,
-    type: 3}
-  m_PrefabInstance: {fileID: 3121903153822040578}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4433f6b147de6ca488e605534913db5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &3121903153822040582 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3121903153536726493, guid: 443095af0eebfab4db9b0bef093c6e42,
