@@ -5,10 +5,11 @@ using UnityEngine.EventSystems;
 
 public class CharacterChooser : MonoBehaviour
 {
-    [SerializeField] List<SelectedStage> _selectedStages;
+    [SerializeField] protected List<SelectedStage> _selectedStages;
+    [SerializeField] protected Launcher _launcher;
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
         // 第一要素だけチェックを付ける
         _selectedStages[0].Check();
@@ -18,7 +19,7 @@ public class CharacterChooser : MonoBehaviour
         this.AddEvent();
     }
 
-    private void AddEvent()
+    protected virtual void AddEvent()
     {
         _selectedStages.ForEach(selectedStage =>
         {
@@ -34,5 +35,10 @@ public class CharacterChooser : MonoBehaviour
 
             eventTrigger.triggers.Add(entry);
         });
+    }
+
+    public virtual void StartGame()
+    {
+        _launcher.Connect();
     }
 }

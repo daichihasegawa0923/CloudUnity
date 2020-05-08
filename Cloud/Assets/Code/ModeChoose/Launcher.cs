@@ -100,4 +100,9 @@ public class Launcher : MonoBehaviourPunCallbacks
             PhotonNetwork.CreateRoom(roomNumber,new RoomOptions() { MaxPlayers = PlaySetting.maxPlayerNum});
         }
     }
+
+    public void SetIsMaster(bool isMaster)
+    {
+        PlaySetting.isMaster = isMaster;
+    }
 }
