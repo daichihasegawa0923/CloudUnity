@@ -31,7 +31,7 @@ public class ControledCharacter : MonoBehaviourPun
 
     [SerializeField] public Vector3 _respornPosition;
 
-    [SerializeField] protected GameObject MainCamera { set; get; }
+    [SerializeField] protected ChasingCamera MainCamera { set; get; }
     [SerializeField] protected Vector3 _cameraDistance;
     private KeyControlOperator _keyControlOperator;
 
@@ -40,12 +40,13 @@ public class ControledCharacter : MonoBehaviourPun
     [SerializeField] protected GameObject _particle;
     private GameObject _currentParticle;
 
+    [SerializeField] protected HealthMeter _healthMeter;
+
     private void Awake()
     {
         this._rigidbody = GetComponent<Rigidbody>();
         this._cameraWork = GetComponent<CameraWork>();
         this._animator = GetComponent<Animator>();
-        this.MainCamera = FindObjectOfType<Camera>().gameObject;
         this._respornPosition = transform.position;
         this._keyControlOperator = FindObjectOfType<KeyControlOperator>();
     }
@@ -55,7 +56,12 @@ public class ControledCharacter : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
+            this.MainCamera = FindObjectOfType<ChasingCamera>();
+            this.MainCamera.ControledCharacter = this;
             _respornPosition = transform.position;
+            if(PlaySetting.gameMode == PlaySetting.GameMode.battle)
+                // バトルモードの時、体力ゲージを表示する
+                this._healthMeter.gameObject.SetActive(true);
         }
 
     }
@@ -69,16 +75,6 @@ public class ControledCharacter : MonoBehaviourPun
         ControlByKey();
         Jump();
         RespornByFall();
-        CameraChase();
-    }
-
-    protected void CameraChase()
-    {
-        if (this.MainCamera != null)
-        {
-            var distance = ((this.transform.position + this._cameraDistance) - MainCamera.transform.position);
-            MainCamera.transform.position += distance * 0.01f;
-        }
     }
 
     private void LateUpdate()
@@ -253,13 +249,29 @@ public class ControledCharacter : MonoBehaviourPun
 
     public void Resporn()
     {
+        PhotonNetwork.Instantiate("dead", transform.position, transform.rotation);
         this._rigidbody.velocity = Vector3.zero;
         this.transform.position = this._respornPosition;
+        // バトルモードの際はダメージを受ける
+        if (PlaySetting.gameMode == PlaySetting.GameMode.battle)
+        {
+            this._healthMeter.Damage();
+            Debug.Log(this._healthMeter.GetHealth());
+            if(this._healthMeter.GetHealth() == 0)
+            {
+                var characters = FindObjectsOfType<ControledCharacter>();
+                this.MainCamera.ControledCharacter = characters[0];
+
+                // 体力が0になったら、キャラクターを削除
+                PhotonNetwork.Destroy(gameObject);
+                Destroy(gameObject);
+            }
+        }
     }
 
     protected void RespornByFall()
     {
-        if (transform.position.y < -200)
+        if (transform.position.y < -20)
         {
             this.Resporn();
         }

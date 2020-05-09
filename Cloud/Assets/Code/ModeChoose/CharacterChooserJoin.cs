@@ -16,7 +16,7 @@ public class CharacterChooserJoin : CharacterChooser
         Debug.Log(string.IsNullOrEmpty(this._joinRoomIdTextInput.text));
         if (string.IsNullOrEmpty(this._joinRoomIdTextInput.text))
         {
-            _errorMessage.AppearMessage("テキストIDが入力されていません。");
+            _errorMessage.AppearMessage("ルームIDが入力されていません。");
             return;
         }
 

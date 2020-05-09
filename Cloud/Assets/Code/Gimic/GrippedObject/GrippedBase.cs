@@ -7,8 +7,8 @@ public class GrippedBase : MonoBehaviourPun
 {
     [SerializeField] protected List<Collider> _colliders;
     [SerializeField] protected Rigidbody _rigidbody;
-    private Grip _grip;
-    private Vector3 _distance;
+    protected Grip _grip;
+    protected Vector3 _distance;
 
     private void Update()
     {
@@ -37,7 +37,7 @@ public class GrippedBase : MonoBehaviourPun
         this._colliders.ForEach(c => c.enabled = true);
     }
 
-    private void HandleObject()
+    protected virtual void HandleObject()
     {
         if (this._grip)
         {
