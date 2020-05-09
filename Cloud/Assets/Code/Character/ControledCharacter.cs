@@ -249,7 +249,7 @@ public class ControledCharacter : MonoBehaviourPun
 
     public void Resporn()
     {
-        PhotonNetwork.Instantiate("dead", transform.position, transform.rotation);
+        var dead = PhotonNetwork.Instantiate("dead", transform.position, transform.rotation);
         this._rigidbody.velocity = Vector3.zero;
         this.transform.position = this._respornPosition;
         // バトルモードの際はダメージを受ける
