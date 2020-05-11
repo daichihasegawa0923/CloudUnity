@@ -14,8 +14,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     [SerializeField] private float _timeoutMaxTime = 30.0f;
 
     [SerializeField] private List<RoomInfo> _roomInfos;
-
-    [SerializeField] private InputField _userNameTextInput;
+    
     [SerializeField] private InputField _roomIdNameTextInput;
 
     [SerializeField] private ErrorMessage _errorMessage;
@@ -48,6 +47,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsConnected)
         {
+            PhotonNetwork.NickName = PlayerPrefs.GetString("nickName", "no name");
             PhotonNetwork.GameVersion = this._gameVersion;
             PhotonNetwork.ConnectUsingSettings();
         }
@@ -60,8 +60,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("ロビーへ参加");
-        var nickName = string.IsNullOrEmpty(_userNameTextInput.text) ? "no name" : _userNameTextInput.text;
-        PhotonNetwork.NickName = nickName;
 
         // ルーム参加時
         if (!PlaySetting.isMaster)
