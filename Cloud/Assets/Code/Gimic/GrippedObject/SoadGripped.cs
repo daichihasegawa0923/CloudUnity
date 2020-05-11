@@ -44,7 +44,6 @@ public class SoadGripped : GrippedBase
 
     protected virtual void DamageActive()
     {
-        Debug.Log(Vector3.Distance(Vector3.zero, this._rigidbody.velocity));
         this._poisonField.gameObject.SetActive
             (Vector3.Distance(Vector3.zero, this._rigidbody.velocity) > this._damageActiveSpeed);
     }

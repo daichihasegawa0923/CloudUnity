@@ -59,6 +59,7 @@ public class ControledCharacter : MonoBehaviourPun
             this.MainCamera = FindObjectOfType<ChasingCamera>();
             this.MainCamera.ControledCharacter = this;
             _respornPosition = transform.position;
+
             if(PlaySetting.gameMode == PlaySetting.GameMode.battle)
                 // バトルモードの時、体力ゲージを表示する
                 this._healthMeter.gameObject.SetActive(true);
@@ -261,6 +262,11 @@ public class ControledCharacter : MonoBehaviourPun
             {
                 var characters = FindObjectsOfType<ControledCharacter>();
                 this.MainCamera.ControledCharacter = characters[0];
+
+                var num = PhotonNetworkWrapper.GetCustomPropertyalue<int>("dead_player_number");
+                Debug.Log(num);
+                num++;
+                PhotonNetworkWrapper.SetCustomPropertyValue("dead_player_number", num);
 
                 // 体力が0になったら、キャラクターを削除
                 PhotonNetwork.Destroy(gameObject);

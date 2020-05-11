@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
+using ExitGames.Client.Photon;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -13,9 +14,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] _respornPositions;
     [SerializeField] private ControledCharacter _controledCharacter;
     [SerializeField] private Text _startText;
+    private bool _isStartOnBattle = false;
+
     // Start is called before the first frame update
     void Start()
     {
+        // バトルモード設定
+        if (PhotonNetwork.IsMasterClient && PlaySetting.gameMode == PlaySetting.GameMode.battle)
+        {
+            PhotonNetworkWrapper.SetCustomPropertyValue("game_mode", "battle");
+        }else
+        {
+            var gameMode = PhotonNetworkWrapper.GetCustomPropertyalue<string>("game_mode");
+            if (gameMode == "battle")
+                PlaySetting.gameMode = PlaySetting.GameMode.battle;
+        }
+
         var chara = PhotonNetwork.Instantiate(PlaySetting.playCharacterResoucesName,
             _respornPositions[PhotonNetwork.CurrentRoom.PlayerCount - 1].transform.position,
             Quaternion.identity,
@@ -23,38 +37,67 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         this._controledCharacter = chara.GetComponent<ControledCharacter>();
 
-        // 対戦の時だけ、全員参加するまで待機する
-        if(PlaySetting.gameMode == PlaySetting.GameMode.battle)
-            StartCoroutine("WaitUser");
-
         this._idText.text = PhotonNetwork.CurrentRoom.Name;
+
+        // バトルモード時の設定
+        this.InitializeBattleModeGame();
     }
 
-    IEnumerator WaitUser()
+    private void InitializeBattleModeGame()
     {
-        this._controledCharacter.enabled = false;
-        this._startText.text = "ほかのユーザーの参加を待っています。";
-        this._startText.gameObject.SetActive(true);
-        while (true)
+        if (PlaySetting.gameMode != PlaySetting.GameMode.battle)
+            return;
+
+        // 対戦の時だけ、全員参加するまで待機する
+        WaitUser();
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
-            yield return new WaitForSeconds(0.50f);
-            var joinNum = PhotonNetwork.CurrentRoom.PlayerCount;
-            var maxNum = PhotonNetwork.CurrentRoom.MaxPlayers;
-
-            if (joinNum == maxNum)
-            {
-                this._controledCharacter.enabled = true;
-                break;
-            }
+            StartGameOnBattle();
         }
+    }
 
+    private void StartGameOnBattle()
+    {
+        this._isStartOnBattle = true;
+        this._controledCharacter.enabled = true;
         this._startText.text = "スタート";
         var scale = this._startText.rectTransform.localScale;
         this._startText.rectTransform.localScale = Vector3.zero;
         this._startText.rectTransform.DOScale(scale, 1.5f);
-        yield return new WaitForSeconds(2.0f);
+        Invoke("DeleteStartText", 2.0f);
+    }
+
+    private void DeleteStartText()
+    {
         this._startText.gameObject.SetActive(false);
     }
+
+    private void  WaitUser()
+    {
+        this._controledCharacter.enabled = false;
+        this._startText.text = "ほかのユーザーの参加を待っています。";
+        this._startText.gameObject.SetActive(true);
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
+    {
+        Debug.Log("更新あり：" + changedProps);
+        if (changedProps.ContainsKey("dead_player_number"))
+        {
+            var deadPlayerNumber = (int)changedProps["dead_player_number"];
+            var onlyOneAlive = deadPlayerNumber == ((int)PhotonNetwork.CurrentRoom.PlayerCount - 1);
+            if (onlyOneAlive)
+            {
+                Debug.Log(PhotonNetwork.NickName + "の勝ち");
+            }
+        }
+    }
+
+    public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
+    {
+    }
+    
 
     public override void OnLeftRoom()
     {
@@ -66,9 +109,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsMasterClient)
             Debug.LogError("this is not a master client.");
-
         Debug.LogFormat("PhotonNetwork:loading level : {0}",PhotonNetwork.CurrentRoom.PlayerCount);
-        // PhotonNetwork.LoadLevel("RoomFor"+PhotonNetwork.CurrentRoom.PlayerCount);
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -77,6 +118,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogFormat("OnPlayerLeftRoom():{0}", otherPlayer.NickName);
         if (PhotonNetwork.IsMasterClient)
             this.LoadArena();
+
+        // バトルモード設定時
+        if (this._isStartOnBattle && photonView.IsMine)
+            PhotonNetwork.CurrentRoom.MaxPlayers = (byte)((int)PhotonNetwork.CurrentRoom.MaxPlayers - 1);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -85,6 +130,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogFormat("OnPlayerEnteredRoom():{0}", newPlayer.NickName);
         if (PhotonNetwork.IsMasterClient)
             this.LoadArena();
+
+        // バトルモード設定時
+        if (PlaySetting.gameMode != PlaySetting.GameMode.battle)
+            return;
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            StartGameOnBattle();
     }
 
     public void LeaveRoom()
