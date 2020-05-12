@@ -4186,7 +4186,7 @@ PrefabInstance:
     - target: {fileID: 4697140101231812026, guid: 6932cfd1e7ffd3f40b1dca9231ffe8d4,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: StageSelect
+      value: ModeChoose
       objectReference: {fileID: 0}
     - target: {fileID: 4697140102879238809, guid: 6932cfd1e7ffd3f40b1dca9231ffe8d4,
         type: 3}
