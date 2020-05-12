@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject[] _respornPositions;
     [SerializeField] private ControledCharacter _controledCharacter;
     [SerializeField] private Text _startText;
+    [SerializeField] private GameResultManager _gameResultManager;
+
     private bool _isStartOnBattle = false;
 
     // Start is called before the first frame update
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             PhotonNetworkWrapper.SetCustomPropertyValue("game_mode", "battle");
         }else
         {
-            var gameMode = PhotonNetworkWrapper.GetCustomPropertyalue<string>("game_mode");
+            var gameMode = PhotonNetworkWrapper.GetCustomPropertyValue<string>("game_mode");
             if (gameMode == "battle")
                 PlaySetting.gameMode = PlaySetting.GameMode.battle;
         }
@@ -80,24 +82,26 @@ public class GameManager : MonoBehaviourPunCallbacks
         this._startText.gameObject.SetActive(true);
     }
 
-    public override void OnPlayerPropertiesUpdate(Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps)
-    {
-        Debug.Log("更新あり：" + changedProps);
-        if (changedProps.ContainsKey("dead_player_number"))
-        {
-            var deadPlayerNumber = (int)changedProps["dead_player_number"];
-            var onlyOneAlive = deadPlayerNumber == ((int)PhotonNetwork.CurrentRoom.PlayerCount - 1);
-            if (onlyOneAlive)
-            {
-                Debug.Log(PhotonNetwork.NickName + "の勝ち");
-            }
-        }
-    }
-
     public override void OnRoomPropertiesUpdate(ExitGames.Client.Photon.Hashtable propertiesThatChanged)
     {
+        Debug.Log("更新あり：" + propertiesThatChanged);
+        if (propertiesThatChanged.ContainsKey("dead_player_number"))
+        {
+            var deadPlayerNumber = (int)propertiesThatChanged["dead_player_number"];
+            var onlyOneAlive = deadPlayerNumber == ((int)PhotonNetwork.CurrentRoom.PlayerCount - 1);
+
+            if(this._controledCharacter != null)
+            {
+                PhotonNetworkWrapper.SetCustomPropertyValue("winner_name", PhotonNetwork.NickName);
+            }
+        }
+
+        if (propertiesThatChanged.ContainsKey("winner_name"))
+        {
+            Debug.Log("勝負あり");
+            this._gameResultManager.AppearCanvas((string)propertiesThatChanged["winner_name"]);
+        }
     }
-    
 
     public override void OnLeftRoom()
     {
@@ -120,7 +124,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             this.LoadArena();
 
         // バトルモード設定時
-        if (this._isStartOnBattle && photonView.IsMine)
+        if (this._isStartOnBattle)
             PhotonNetwork.CurrentRoom.MaxPlayers = (byte)((int)PhotonNetwork.CurrentRoom.MaxPlayers - 1);
     }
 
@@ -143,10 +147,5 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom();
         PhotonNetwork.Disconnect();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

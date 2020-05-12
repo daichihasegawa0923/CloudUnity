@@ -5,15 +5,12 @@ using Photon.Pun;
 
 public class PhotonNetworkWrapper : MonoBehaviour
 {
-    public static T GetCustomPropertyalue<T>(string key)
+    public static T GetCustomPropertyValue<T>(string key)
     {
-        foreach (var playerItem in PhotonNetwork.PlayerList)
+        if (PhotonNetwork.CurrentRoom.CustomProperties.ContainsKey(key))
         {
-            if (playerItem.CustomProperties.ContainsKey(key))
-            {
-                Debug.Log((T)playerItem.CustomProperties[key]);
-                return (T)playerItem.CustomProperties[key];
-            }
+            Debug.Log((T)PhotonNetwork.CurrentRoom.CustomProperties[key]);
+            return (T)PhotonNetwork.CurrentRoom.CustomProperties[key];
         }
 
         return default;
@@ -25,6 +22,6 @@ public class PhotonNetworkWrapper : MonoBehaviour
         {
             { key, value }
         };
-        PhotonNetwork.SetPlayerCustomProperties(hash);
+        PhotonNetwork.CurrentRoom.SetCustomProperties(hash);
     }
 }

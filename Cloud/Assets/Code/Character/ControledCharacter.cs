@@ -263,7 +263,7 @@ public class ControledCharacter : MonoBehaviourPun
                 var characters = FindObjectsOfType<ControledCharacter>();
                 this.MainCamera.ControledCharacter = characters[0];
 
-                var num = PhotonNetworkWrapper.GetCustomPropertyalue<int>("dead_player_number");
+                var num = PhotonNetworkWrapper.GetCustomPropertyValue<int>("dead_player_number");
                 Debug.Log(num);
                 num++;
                 PhotonNetworkWrapper.SetCustomPropertyValue("dead_player_number", num);
