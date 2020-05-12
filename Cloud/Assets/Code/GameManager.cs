@@ -30,6 +30,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             var gameMode = PhotonNetworkWrapper.GetCustomPropertyValue<string>("game_mode");
             if (gameMode == "battle")
                 PlaySetting.gameMode = PlaySetting.GameMode.battle;
+            else
+                PlaySetting.gameMode = PlaySetting.GameMode.treasure;
         }
 
         var chara = PhotonNetwork.Instantiate(PlaySetting.playCharacterResoucesName,

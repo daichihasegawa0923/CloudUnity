@@ -22,6 +22,8 @@ public class StageSelectManager : MonoBehaviour
     [SerializeField] private byte _minimumPlayerNumber = 2;
     [SerializeField] private byte _maxPlayerNumber = 4;
 
+    private readonly string MAX_PLAYER_NUMBER_STRAGED_NAME = "max_player_number";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,10 @@ public class StageSelectManager : MonoBehaviour
             _selectedStages[0].Check();
 
         AddEventToCheckbox();
+
+        // 参加ユーザー数を保存してある値から取得
+        PlaySetting.maxPlayerNum = (byte)PlayerPrefs.GetInt(MAX_PLAYER_NUMBER_STRAGED_NAME, this._minimumPlayerNumber);
+        this._playerNumberText.text = PlaySetting.maxPlayerNum.ToString();
     }
 
     private void InitializeStages(GameObject listsParentObject,List<SelectedStage> stages)
@@ -140,6 +146,7 @@ public class StageSelectManager : MonoBehaviour
         else if (PlaySetting.maxPlayerNum < this._minimumPlayerNumber)
             PlaySetting.maxPlayerNum = this._minimumPlayerNumber;
 
+        PlayerPrefs.SetInt(MAX_PLAYER_NUMBER_STRAGED_NAME, (int)PlaySetting.maxPlayerNum);
         _playerNumberText.text = PlaySetting.maxPlayerNum.ToString();
     }
 
