@@ -10,7 +10,7 @@ public class GrippedBase : MonoBehaviourPun
     protected Grip _grip;
     protected Vector3 _distance;
 
-    private void Update()
+    protected virtual void Update()
     {
         this.HandleObject();
     }

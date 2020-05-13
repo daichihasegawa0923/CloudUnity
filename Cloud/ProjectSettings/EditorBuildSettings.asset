@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/battle_01_koroshiamu.unity
     guid: 57cfd5cea33901940859ceadab2cc917
+  - enabled: 1
+    path: Assets/Scenes/battle_02_guns.unity
+    guid: feabdb9210861994da815a2fe5ce439a
   m_configObjects: {}
