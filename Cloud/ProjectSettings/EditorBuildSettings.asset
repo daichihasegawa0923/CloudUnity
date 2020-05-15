@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/battle_02_guns.unity
     guid: feabdb9210861994da815a2fe5ce439a
+  - enabled: 1
+    path: Assets/Scenes/treasure_03_castle.unity
+    guid: b4534d50db199c14ba436433600d336c
   m_configObjects: {}

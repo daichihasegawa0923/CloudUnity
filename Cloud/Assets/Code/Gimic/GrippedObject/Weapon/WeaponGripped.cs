@@ -30,7 +30,6 @@ public class WeaponGripped : GrippedBase
     {
         base.Released(grip);
         this._rigidbody.velocity = transform.forward * this._releasingSpeed;
-        StartCoroutine("DamageDelete");
     }
 
     protected override void HandleObject()

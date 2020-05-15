@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 1091248932}
   - component: {fileID: 1091248931}
   - component: {fileID: 3074889164718565087}
+  - component: {fileID: 5250218987511967951}
   m_Layer: 0
   m_Name: gun
   m_TagString: Untagged
@@ -235,3 +236,16 @@ MonoBehaviour:
   _burretName: burret
   _burretFrequency: 0.5
   _burretSpeed: 15
+--- !u!114 &5250218987511967951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6087039947030182526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c98ac303562557c49900cbaa64786740, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _respornDepth: -20
